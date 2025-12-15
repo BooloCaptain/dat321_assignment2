@@ -1,6 +1,7 @@
 from model.abstract_timer import ATimer
 from datetime import datetime, timedelta
 import time
+from typing import Callable, Optional
 
 class Timer(ATimer):
     """
@@ -13,8 +14,22 @@ class Timer(ATimer):
     current_seconds: int = 0
     previous_seconds: int = 0
 
-    def __init__(self) -> None:
-        pass
+    def __init__(
+        self,
+        time_fn: Optional[Callable[[], float]] = None,
+        datetime_cls: Optional[type] = None,
+    ) -> None:
+        # Allow injecting a time provider for testability; default to real time
+        self.time_fn: Callable[[], float] = time_fn or time.time
+        self.datetime_cls: type = datetime_cls or datetime
+
+        # Initialize timer state
+        self.reset_timer = True
+        self.stopped = False
+        self.elapsed_time = timedelta(0)
+        self.start_time = self.datetime_cls.now()
+        self.current_seconds = 0
+        self.previous_seconds = 0
 
     def start(self) -> None:
         """
@@ -24,11 +39,11 @@ class Timer(ATimer):
             return
 
         if self.reset_timer:
-            self.start_time = datetime.now()
+            self.start_time = self.datetime_cls.fromtimestamp(self.time_fn())
             self.elapsed_time = timedelta(0)
             self.reset_timer = False
         
-        curr_time = int(time.time())
+        curr_time = int(self.time_fn())
         self.current_seconds = curr_time
         self.previous_seconds = curr_time
         self.stopped = False
@@ -72,11 +87,11 @@ class Timer(ATimer):
         """
         self.start_time = new_time
         self.elapsed_time = timedelta(0)
-        curr_time = int(time.time())
+        curr_time = int(self.time_fn())
         self.current_seconds = curr_time
         self.previous_seconds = curr_time
 
     def __update_time(self):
         self.previous_seconds = self.current_seconds
-        self.current_seconds = int(time.time())
+        self.current_seconds = int(self.time_fn())
         self.elapsed_time += timedelta(seconds= self.current_seconds - self.previous_seconds)
