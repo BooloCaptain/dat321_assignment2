@@ -7,5 +7,10 @@ Feature: time slider
 
   Scenario: slider is moved all the way left
      Given the app is running
-      When the slider is dragged left
+      When the slider is dragged all the way left
+      Then the time will be 00:00
+
+  Scenario: slider is moved all the way right
+     Given the app is running
+      When the slider is dragged all the way right
       Then the time will be 00:00

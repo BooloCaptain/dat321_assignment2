@@ -31,9 +31,14 @@ def step_impl(context):
     time = context.app.model.get_time()
     assert time.hour >= 12 and time.minute > 0
 
-@when('the slider is dragged left')
+@when('the slider is dragged all the way left')
 def step_impl(context):
     context.app.slider._slider.set(0)  # simulate dragging the slider 
+    context.app.slider.set_time(None)    # trigger the time update
+
+@when('the slider is dragged all the way right')
+def step_impl(context):
+    context.app.slider._slider.set(1440)  # simulate dragging the slider 
     context.app.slider.set_time(None)    # trigger the time update
 
 @then('the time will be 00:00')
