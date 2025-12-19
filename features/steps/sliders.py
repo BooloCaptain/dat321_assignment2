@@ -45,3 +45,9 @@ def step_impl(context):
 def step_impl(context):
     time = context.app.model.get_time()
     assert time.hour == 0 and time.minute == 0
+
+
+@then('the time will be 23:59')
+def step_impl(context):
+    time = context.app.model.get_time()
+    assert time.hour == 23 and time.minute == 59

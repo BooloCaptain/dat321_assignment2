@@ -13,4 +13,4 @@ Feature: time slider
   Scenario: slider is moved all the way right
      Given the app is running
       When the slider is dragged all the way right
-      Then the time will be 00:00
+      Then the time will be 23:59
