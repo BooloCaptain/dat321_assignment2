@@ -16,6 +16,7 @@ from model.algorithm.nn_model.nn_alg import NNAlg
 from model.timer import Timer
 
 class Application:
+    slider: TimeSlider
     def __init__(self, model, start_time : datetime):
         self.model = model
         self.model.set_time(start_time)
@@ -26,7 +27,7 @@ class Application:
         # Demo model
         model = self.model
         # Slider and clock widget
-        slider = TimeSlider(self.app, model)
+        self.slider = TimeSlider(self.app, model)
         clock_widget = ClockWidget(self.app, self.model)
         
         # Activation button and schedule list
